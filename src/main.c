@@ -1,6 +1,9 @@
 #include <pebble.h>
 
 #define WORKER_TICKS 0
+#define INSET 8
+#define TICKS_LAYER_ALIGNMENT PBL_IF_RECT_ELSE(GTextAlignmentLeft, GTextAlignmentCenter)
+#define X_PADDING PBL_IF_RECT_ELSE(5, 0)
 
 static Window *s_main_window;
 static TextLayer *s_output_layer, *s_ticks_layer;
@@ -49,16 +52,25 @@ static void click_config_provider(void *context) {
 }
 
 static void main_window_load(Window *window) {
+  Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_bounds(window_layer);
+
   // Create UI
-  s_output_layer = text_layer_create(GRect(0, 0, 144, 168));
+  s_output_layer = text_layer_create(bounds);
   text_layer_set_text(s_output_layer, "Use SELECT to start/stop the background worker.");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_output_layer));
+  layer_add_child(window_layer, text_layer_get_layer(s_output_layer));
+#ifdef PBL_SDK_3
+  text_layer_enable_screen_text_flow_and_paging(s_output_layer, INSET);
+#endif
 
-  s_ticks_layer = text_layer_create(GRect(5, 135, 144, 30));
+  s_ticks_layer = text_layer_create(GRect(X_PADDING, 135, bounds.size.w, 30));
   text_layer_set_text(s_ticks_layer, "No data yet.");
-  text_layer_set_text_alignment(s_ticks_layer, GTextAlignmentLeft);
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_ticks_layer));
+  text_layer_set_text_alignment(s_ticks_layer, TICKS_LAYER_ALIGNMENT);
+  layer_add_child(window_layer, text_layer_get_layer(s_ticks_layer));
+#ifdef PBL_SDK_3
+  text_layer_enable_screen_text_flow_and_paging(s_ticks_layer, INSET);
+#endif
 }
 
 static void main_window_unload(Window *window) {
