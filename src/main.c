@@ -58,7 +58,7 @@ static void main_window_load(Window *window) {
   text_layer_set_text(s_output_layer, "Use SELECT to start/stop the background worker.");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_output_layer));
-#ifdef PBL_SDK_3
+#ifdef PBL_ROUND
   text_layer_enable_screen_text_flow_and_paging(s_output_layer, inset);
 #endif
 
@@ -67,7 +67,7 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_ticks_layer, PBL_IF_RECT_ELSE(GTextAlignmentLeft, 
                                                                 GTextAlignmentCenter));
   layer_add_child(window_layer, text_layer_get_layer(s_ticks_layer));
-#ifdef PBL_SDK_3
+#ifdef PBL_ROUND
   text_layer_enable_screen_text_flow_and_paging(s_ticks_layer, inset);
 #endif
 }
